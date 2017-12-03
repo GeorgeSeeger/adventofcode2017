@@ -4,7 +4,7 @@ class SummingSpiral
   def initialize
     @spiral = [[1]]
     @dir = 'u'
-    @ind = [@spiral.length/2, @spiral.length - 1]
+    @ind = [0, 0]
   end
 
   def add_next
@@ -15,9 +15,9 @@ class SummingSpiral
       next_ind
       cell = get_cell
     end
-    cell = sum_of_neighbours(@ind)
-    assignTo(@ind, cell)
-    cell
+    
+    assign_to_ind(val = sum_of_neighbours(@ind))
+    val
   end
 
   private
@@ -54,8 +54,6 @@ class SummingSpiral
     @dir = 'u' if (ind[0] == (@spiral.length - 1) && ind[1] == (@spiral.length - 1))
 
     @ind = ind
-
-    return ind
   end
 
   def sum_of_neighbours(indices)
@@ -73,7 +71,7 @@ class SummingSpiral
     .reject{ |a| a.any?{|i| i < 0 || i >= @spiral.length } }
   end
 
-  def assignTo(ind, val) 
+  def assign_to_ind(val, ind = @ind) 
     @spiral[ind.first][ind.last] = val
   end
 end
@@ -81,4 +79,5 @@ end
 spr = SummingSpiral.new
 magic_number = 265149
 until (cell = spr.add_next) > magic_number; end
+spr.spiral.each do |a| puts a.join("\t") end
 p cell
