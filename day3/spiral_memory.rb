@@ -13,7 +13,6 @@ def findDistance(n)
   return band / 2 + (side.to_a.find_index(n) - band / 2).abs
 end
 
-
 p findDistance(23)
 p findDistance(1024)
 
