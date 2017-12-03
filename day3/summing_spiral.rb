@@ -78,11 +78,7 @@ class SummingSpiral
   end
 end
 
-#require './summing_spiral'
 spr = SummingSpiral.new
 magic_number = 265149
-cell = 1
-until cell > magic_number
-  cell = spr.add_next
-end
+until (cell = spr.add_next) > magic_number; end
 p cell
