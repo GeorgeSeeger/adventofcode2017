@@ -1,0 +1,9 @@
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\bin\Debug\netcoreapp1.1\C.Sharp.Solutions.deps.json
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\bin\Debug\netcoreapp1.1\C.Sharp.Solutions.runtimeconfig.json
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\bin\Debug\netcoreapp1.1\C.Sharp.Solutions.runtimeconfig.dev.json
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\bin\Debug\netcoreapp1.1\C.Sharp.Solutions.dll
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\bin\Debug\netcoreapp1.1\C.Sharp.Solutions.pdb
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\obj\Debug\netcoreapp1.1\C.Sharp.Solutions.csprojResolveAssemblyReference.cache
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\obj\Debug\netcoreapp1.1\C.Sharp.Solutions.AssemblyInfo.cs
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\obj\Debug\netcoreapp1.1\C.Sharp.Solutions.dll
+C:\Users\GeorgeSeeger\Documents\kata\Adventofcode\c-sharp-solns\obj\Debug\netcoreapp1.1\C.Sharp.Solutions.pdb
