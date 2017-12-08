@@ -11,15 +11,14 @@ class Program
   def assemble_tower programs
     @sub_tower = []
     @sub_names.each do |n|
-      @sub_tower.push( programs.select{|p| p.name == n}.first)
+      @sub_tower.push( programs.find{|p| p.name == n})
       @sub_tower.each do |sp| sp.parent = self end
     end
   end
 
   def balance?
     return true if !@sub_tower.any?
-    oneOfThemWeights = @sub_tower.first.total_weight
-    @sub_tower.all?{ |p| p.total_weight == oneOfThemWeights }
+    @sub_tower.map(&:total_weight).uniq.length == 1
   end
 
   def total_weight
@@ -45,9 +44,9 @@ class ProgramTree
     topProgram = arr.select{|p| !p.sub_names.any? }.first
     bottomProgram = false
     while !bottomProgram
-      lowerProgram = arr.select{ |p| 
+      lowerProgram = arr.find{ |p| 
         p.sub_names.include? topProgram.name
-      }.first
+      }
       bottomProgram = topProgram if lowerProgram.nil?
       topProgram = lowerProgram
     end
@@ -57,7 +56,7 @@ class ProgramTree
   def find_unbalanced program
     return program if program.balance?
     weights = program.sub_tower.map(&:total_weight)
-    find_unbalanced program.sub_tower.select{|p| weights.count{|w| w == p.total_weight} == 1 }.first
+    find_unbalanced program.sub_tower.find{|p| weights.count{|w| w == p.total_weight} == 1 }
   end
 end
 
@@ -65,4 +64,4 @@ end
 tree = ProgramTree.new
 puts tree.base.name
 puts "#{tree.unbalanced.name} is #{tree.unbalanced.weight} weight, total of #{tree.unbalanced.total_weight}
-  it should total #{tree.unbalanced.parent.sub_tower.select{|p| p.balance?}.first.total_weight}"
+  it should total #{tree.unbalanced.parent.sub_tower.find{|p| p.balance?}.total_weight}"
