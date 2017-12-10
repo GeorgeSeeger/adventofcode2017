@@ -25,6 +25,10 @@ end
 class Hasher
   def initialize input
     @inputs = input
+    set_vars_to_zero
+  end
+
+  def set_vars_to_zero
     @list = CircularList.new
     @pos = 0
     @skip = 0
@@ -40,11 +44,13 @@ class Hasher
   end
 
   def first_task
+    set_vars_to_zero
     knot_hash
     @list.values.first(2).reduce(&:*)
   end
 
   def hash
+    set_vars_to_zero
     64.times do 
       knot_hash
     end
