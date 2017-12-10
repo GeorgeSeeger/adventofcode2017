@@ -1,8 +1,8 @@
 class CircularList
   attr_reader :values
 
-  def initialize(range = (0..255))
-    @values = range.to_a
+  def initialize(range = nil)
+    @values = range || (0..255).to_a
   end
 
   def reverse_between(i, j)
@@ -21,38 +21,41 @@ class CircularList
   end
 end
 
-def carry_out_first(input = nil, list = CircularList.new, pos = 0, skip = 0)
-  inputs = input || File.readlines('./input').first.split(',').map(&:to_i)
-  inputs.each do |len|
-    mod = list.values.length
-    list.reverse_between pos, (pos + len) % mod
-    pos += len + skip
-    pos %= mod
-    skip += 1
+
+class Hasher
+  def initialize input
+    @inputs = input
+    @list = CircularList.new
+    @pos = 0
+    @skip = 0
   end
 
-  puts list.values.first(2).reduce(&:*) if !input
-end
-
-def carry_out_second(input = nil)
-  list = CircularList.new
-  inputs = (input || File.readlines('./input').first.strip).codepoints.concat([17, 31, 73, 47, 23])
-  pos = 0
-  skip = 0
-  (1..64).each do 
-    inputs.each do |len|
-      mod = list.values.length
-      list.reverse_between pos, (pos + len) % mod
-      pos += len + skip
-      pos %= mod
-      skip += 1
+  def knot_hash
+    @inputs.each do |len|
+      mod = @list.values.length
+      @list.reverse_between(@pos, (@pos + len) % mod)
+      @pos = (@pos + len + @skip) % mod
+      @skip += 1
     end
   end
 
-  puts list.values.each_slice(16).map{|s| s.reduce(&:^)}.map{|i| i.to_s(16).rjust(2, "0")}.join
+  def first_task
+    knot_hash
+    @list.values.first(2).reduce(&:*)
+  end
+
+  def hash
+    64.times do 
+      knot_hash
+    end
+    @list.values.each_slice(16).map{|s| s.reduce(&:^)}.map{|i| i.to_s(16).rjust(2, "0")}.join
+  end
+
+  def self.hash_string(str)
+    Hasher.new(str.strip.codepoints.concat([17, 31, 73, 47, 23])).hash
+  end
 end
 
-carry_out_first
-carry_out_second
-carry_out_second("") #a2582a3a0e66e6e86e3812dcb672a272
-
+puts Hasher.new(File.readlines('./input').first.split(',').map(&:to_i)).first_task
+puts Hasher.hash_string(File.readlines('./input').first)
+puts Hasher.hash_string("") #a2582a3a0e66e6e86e3812dcb672a272
