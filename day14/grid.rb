@@ -27,13 +27,14 @@ class DiskGrid
            regions += 1
         end
       end
-      grid.shift
+      @grid_2.shift
     end
     regions
   end
   private 
 
   def group_explorer coords
+    return unless coords.any?
     new_coords = []
     coords.each do |c|
       if (get_val(c) == "1") 
