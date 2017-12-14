@@ -42,7 +42,7 @@ class PipeMaster {
       nextGen.forEach(p => group.push(p));
       nextGen = nextGen.map(p => p.programs);
       nextGen = [].concat.apply([], nextGen) //flatten
-                          .filter(p => !group.map(pr => pr.name).includes(p.name)); 
+                          .filter(p => !group.includes(p)); 
     }
     return group;
   }
