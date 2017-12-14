@@ -62,6 +62,6 @@ class Hasher
   end
 end
 
-puts Hasher.new(File.readlines('./input').first.split(',').map(&:to_i)).first_task
-puts Hasher.hash_string(File.readlines('./input').first)
-puts Hasher.hash_string("") #a2582a3a0e66e6e86e3812dcb672a272
+#puts Hasher.new(File.readlines('./input').first.split(',').map(&:to_i)).first_task
+#puts Hasher.hash_string(File.readlines('./input').first)
+#puts Hasher.hash_string("") #a2582a3a0e66e6e86e3812dcb672a272
