@@ -23,7 +23,7 @@ class DiskGrid
     while (@grid_2.any?)
       @grid_2.first.each.with_index do |e, i|
         if (e == "1")
-           group_explorer [[0, i]]
+           group_destroy [[0, i]]
            regions += 1
         end
       end
@@ -33,7 +33,7 @@ class DiskGrid
   end
   private 
 
-  def group_explorer coords
+  def group_destroy coords
     return unless coords.any?
     new_coords = []
     coords.each do |c|
@@ -43,7 +43,7 @@ class DiskGrid
       @grid_2[c.first][c.last] = "0"
     end
 
-    group_explorer(new_coords.reject{|c| get_val(c) == "0"})
+    group_destroy(new_coords.reject{|c| get_val(c) == "0"})
   end
 
   def get_val c
