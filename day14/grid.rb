@@ -5,6 +5,7 @@ class DiskGrid
   def initialize(input)
     @input = input
     @grid = make_grid input
+    @neighbour_offsets = [0, -1, 1].permutation(2).reject{|a| a.reduce(&:+) == 0}
   end
 
   def make_grid(input)
@@ -14,44 +15,47 @@ class DiskGrid
   end
 
   def count_squares
-    @grid.map{|ca| ca.join("")}.join("").chars.count{|c| c == "1"}
+    @grid.flatten.count{|c| c == "1"}
   end
 
   def count_regions
-    @grid_2 = make_grid(@input)
+    @marked_grid = @grid.clone
     regions = 0
-    while (@grid_2.any?)
-      @grid_2.first.each.with_index do |e, i|
+    while (@marked_grid.any?)
+      @marked_grid.first.each.with_index do |e, i|
         if (e == "1")
-           group_destroy [[0, i]]
+           group_fill [[0, i]]
            regions += 1
         end
       end
-      @grid_2.shift
+      @marked_grid.shift
     end
     regions
   end
   private 
 
-  def group_destroy coords
+  def group_fill(coords)
     return unless coords.any?
-    new_coords = []
-    coords.each do |c|
-      if (get_val(c) == "1") 
-        get_neighbours(c).each{|co| new_coords.push co}
-      end
-      @grid_2[c.first][c.last] = "0"
+
+    new_coords = coords.map{ |c|
+      get_val(c) == "1" ? get_neighbours(c) : nil
+    }.flatten(1)
+    .reject{|c| c.nil? || get_val(c) == "0"}
+
+    coords.each do |c| 
+      @marked_grid[c.first][c.last] = "0"
     end
-
-    group_destroy(new_coords.reject{|c| get_val(c) == "0"})
+    group_fill(new_coords)
   end
 
-  def get_val c
-    @grid_2[c.first][c.last]
+  def get_val(c)
+    @marked_grid[c.first][c.last]
   end
 
-  def get_neighbours coord
-    [[coord.first - 1, coord.last], [coord.first + 1, coord.last], [coord.first, coord.last - 1], [coord.first, coord.last + 1]].reject{|c| c.any?{|i| i < 0} || c[0] >= @grid_2.length || c[1] >= @grid_2.first.length}
+  def get_neighbours(c)
+    @neighbour_offsets
+          .map{|a| [ c[0]+a[0], c[1]+a[1] ]}
+          .reject{|c| c.any?{|i| i < 0} || c[0] >= @marked_grid.length || c[1] >= @marked_grid.first.length}
   end 
 end
 
