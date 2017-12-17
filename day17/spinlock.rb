@@ -8,7 +8,6 @@ class Spinlock
 
   def inserts
     2017.times do |i|
-      prime = [@buffer[1], @position, @buffer.length, (@position + @jump) % (i + 1)]
       @position = (@position + @jump) % @buffer.length
       insert_after_position i + 1 
     end
