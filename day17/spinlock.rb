@@ -7,9 +7,9 @@ class Spinlock
   end
 
   def inserts
-    2017.times do |i|
-      @position = (@position + @jump) % @buffer.length
-      insert_after_position i + 1 
+    2017.times do
+      @position = ((@position + @jump) % @buffer.length) + 1 
+      @buffer.insert(@position, @buffer.length)
     end
   end
 
@@ -25,12 +25,6 @@ class Spinlock
       answer = i + 1 if position == 1
     end
     answer
-  end
-  
-  private
-  def insert_after_position i
-    @buffer = @buffer[0..@position] + [i] + @buffer[@position+1..-1]
-    @position += 1
   end
 end
 
