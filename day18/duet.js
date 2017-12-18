@@ -1,10 +1,10 @@
 class Duet {
-    constructor(input, id, queue) {
+    constructor(input, id, sendQ, receiveQ) {
         this.input = input;
         this.pointer = 0;
         this.reg = {};
-        this.queue = queue;
-        this.id = id;
+        this.sendQ = sendQ;
+        this.receiveQ = receiveQ;
         this.awaiting = false;
         this.initReg(id);
         this.fcts = {
@@ -13,10 +13,9 @@ class Duet {
             "set": (a, v) => this.reg[a] = +v,
             "mod": (a,v ) => this.reg[a] %= v,
             "jgz": (a, v) => (+a > 0 || isNaN(a) && this.reg[a] > 0) ? this.pointer += v - 1 : v,
-            "snd": (a) => this.queue.enqueue(id, isNaN(a) ?  this.reg[a] : +a ),
+            "snd": (a) => this.sendFrom(a),
             "rcv": (a) => this.receiveAt(a),
         }
-        this.carryOut();
     }
 
     initReg(id) {
@@ -25,36 +24,43 @@ class Duet {
     }
 
     carryOut() {
+        this.awaiting = false;
         for (;this.pointer >= 0 && this.pointer < this.input.length && !this.awaiting; this.pointer++) {
             var getVal = (val) => isNaN(val) ? (Object.keys(this.reg).includes(val) ? this.reg[val] : null) : +val;
             var inst = this.input[this.pointer].split(" ");
             this.fcts[inst[0]](inst[1], getVal(inst[2]));
         }
     }
-
+    sendFrom(a) {
+        var out = isNaN(a) ? this.reg[a] : +a;
+        this.awaiting = true;
+        this.sendQ.enqueue(out);
+    }
     receiveAt(a) {
-        var id = this.id == 0 ? 1 : 0;
-        if (this.queue.queues[id].length == 0) {
+        if (this.receiveQ.length == 0) {
             this.awaiting = true;
         } else {
-            this.reg[a] = this.queue.dequeue(id)
+            this.reg[a] = this.receiveQ.dequeue()
         }
     }
 }
 
 class MessageQueue {
     constructor() {
-        this.p1Counter=0;
-        this.queues = { 0: [], 1: []};
+        this.sendCounter = 0;
+        this.queue = [];
+    }
+    get length() {
+        return this.queue.length;
     }
 
-    enqueue(id, val) {
-        if (id == 1) this.p1Counter++;
-        this.queues[id].push(val);
+    enqueue(val) {
+        this.sendCounter++;
+        this.queue.push(val);
     }
 
-    dequeue(id) {
-        return this.queues[id].pop();
+    dequeue() {
+        return this.queue.shift();
     }
 }
 
@@ -62,13 +68,22 @@ class MessageQueue {
 var fs = require("fs");
 var input = fs.readFileSync("./day18/input", "utf8").split("\n");
 // var input = fs.readFileSync("./test", "utf8").split("\r\n");
-var queue = new MessageQueue();
-var p0 = new Duet(input, 0, queue);
-var p1 = new Duet(input, 1, queue);
+// var input = `snd 1
+// snd 2
+// snd p
+// rcv a
+// rcv b
+// rcv c
+// rcv d`.split("\n");
+var queue0 = new MessageQueue();
+var queue1 = new MessageQueue();
+var p0 = new Duet(input, 0, queue0, queue1);
+var p1 = new Duet(input, 1, queue1, queue0);
 
-while (Object.values(queue.queues).some(a => a.length > 0)) {
-    p0.carryOut();
+do {
     p1.carryOut();
-}
+    p0.carryOut();
+    console.log(queue0.length + " & " + queue1.length )
+} while (queue0.length > 0 || queue1.length > 0)
 
-console.log(queue.p1Counter);
+console.log(queue1.sendCounter / 2);
