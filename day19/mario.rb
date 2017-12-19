@@ -3,15 +3,15 @@ class Mario
   def initialize input
     @dirs = [[0,1],[-1,0],[0,-1],[1,0]]
     @dir = [1,0]
-    @position = [0,input.first.chars.find_index("|") + 1]
+    @position = [0,input.first.chars.find_index("|")]
     @map = input
     @chars = []
     traverse
   end
 
   def traverse
+    p val
     until at_the_end
-      p val
       move_forward
       @chars.push val if /[A-Za-z]/.match val
       turn_corner if val == "+"
@@ -39,6 +39,7 @@ class Mario
   end
 
   def at_the_end
+    #if @dirs.any?{|i| i < 0 || i > input.first.length}
     !/[A-Z]/.match(val).nil? && @dirs.map{|d| val(peep(d))}.count{|s| s == " " } == 3
   end
 end
