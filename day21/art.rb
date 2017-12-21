@@ -86,3 +86,5 @@ input = File.open("./day21/input").each_line.map(&:chomp)
 art = Art.new(input)
 5.times do art.iterate end
 p art.count_on
+13.times do art.iterate end
+p art.count_on
