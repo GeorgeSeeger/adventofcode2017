@@ -53,7 +53,7 @@ class Art
   end
 
   def transforms(arr)
-    [arr, rotate(arr), rotate(rotate(arr)), rotate(rotate(rotate(arr)))].map{|a| [flip_hor(a), a.reverse]}.flatten(1)
+    (0..3).map{|i| a = arr; i.times{ a = rotate(a)}; a}.map{|a| [flip_hor(a), a.reverse]}.flatten(1)
   end
 
   def rotate(arr)
